@@ -6,27 +6,16 @@ export default function Home() {
 
   useEffect(() => {
     const channelId = 'UC-SjVidMAjolfD6TswB3hMQ';
-    const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+    const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 
-    fetch(feedUrl)
-      .then(response => response.text())
-      .then(str => {
-        const parser = new window.DOMParser();
-        const xml = parser.parseFromString(str, "text/xml");
-        const entries = Array.from(xml.getElementsByTagName("entry"));
-
-        const items = entries.map(entry => {
-          const videoId = entry.getElementsByTagName("yt:videoId")[0]?.textContent;
-          const title = entry.getElementsByTagName("title")[0]?.textContent;
-
-          return {
-            title: title,
-            link: `https://www.youtube.com/watch?v=${videoId}`,
-            thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-          };
-        });
-
-        setVideos(items);
+    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`)
+      .then(res => res.json())
+      .then(data => {
+        const filteredItems = (data.items || []).filter(item =>
+          item.author === 'Sanatan Leela Katha' &&
+          item.link.includes('youtube.com/watch')
+        );
+        setVideos(filteredItems);
       });
   }, []);
 
@@ -54,10 +43,10 @@ export default function Home() {
       />
 
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'20px'}}>
-        {filtered.map((v,i)=>(
-          <a key={i} href={v.link} target="_blank" style={{textDecoration:'none',color:'#000',boxShadow:'0 0 10px #ccc',padding:'10px',background:'#fff'}}>
-            <img src={v.thumbnail} style={{width:'100%'}} />
-            <h3>{v.title}</h3>
+        {filtered.map((video, i) => (
+          <a key={i} href={video.link} target="_blank" style={{textDecoration:'none',color:'#000',boxShadow:'0 0 10px #ccc',padding:'10px',background:'#fff'}}>
+            <img src={video.thumbnail} style={{width:'100%'}} />
+            <h3>{video.title}</h3>
           </a>
         ))}
       </div>
