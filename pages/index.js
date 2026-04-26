@@ -6,15 +6,18 @@ export default function Home() {
 
   useEffect(() => {
     const apiKey = 'AIzaSyAV_WEwUMe8lp7pIEHeuCUl3QovsU2IRac';
-    const channelId = 'UC-SjVidMAjolfD6TswB3hMQ';
+    const uploadPlaylist = 'UU-SjVidMAjolfD6TswB3hMQ';
 
-    fetch('https://www.googleapis.com/youtube/v3/search?key=' + apiKey + '&channelId=' + channelId + '&part=snippet,id&order=date&maxResults=50')
+    fetch(
+      'https://www.googleapis.com/youtube/v3/playlistItems?key=' +
+        apiKey +
+        '&playlistId=' +
+        uploadPlaylist +
+        '&part=snippet,contentDetails&maxResults=50'
+    )
       .then((res) => res.json())
       .then((data) => {
-        const onlyVideos = (data.items || []).filter(
-          (item) => item.id.kind === 'youtube#video'
-        );
-        setVideos(onlyVideos);
+        setVideos(data.items || []);
       });
   }, []);
 
@@ -77,7 +80,7 @@ export default function Home() {
         {filtered.map((video, index) => (
           <a
             key={index}
-            href={"https://www.youtube.com/watch?v=" + video.id.videoId}
+            href={"https://www.youtube.com/watch?v=" + video.contentDetails.videoId}
             target="_blank"
             style={{
               textDecoration: 'none',
