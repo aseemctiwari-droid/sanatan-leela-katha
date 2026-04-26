@@ -5,24 +5,19 @@ export default function Home() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    const apiKey = 'AIzaSyAV_WEwUMe8lp7pIEHeuCUl3QovsU2IRac';
     const channelId = 'UC-SjVidMAjolfD6TswB3hMQ';
-    const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 
-    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`)
+    fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=50`)
       .then(res => res.json())
       .then(data => {
-
-        
-        setVideos(data.items || []);
-
-
-        
-        setVideos(filteredItems);
+        const onlyVideos = (data.items || []).filter(item => item.id.kind === 'youtube#video');
+        setVideos(onlyVideos);
       });
   }, []);
 
   const filtered = videos.filter(v =>
-    v.title.toLowerCase().includes(search.toLowerCase())
+    v.snippet.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -46,9 +41,14 @@ export default function Home() {
 
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'20px'}}>
         {filtered.map((video, i) => (
-          <a key={i} href={video.link} target="_blank" style={{textDecoration:'none',color:'#000',boxShadow:'0 0 10px #ccc',padding:'10px',background:'#fff'}}>
-            <img src={video.thumbnail} style={{width:'100%'}} />
-            <h3>{video.title}</h3>
+          <a
+            key={i}
+            href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+            target="_blank"
+            style={{textDecoration:'none',color:'#000',boxShadow:'0 0 10px #ccc',padding:'10px',background:'#fff'}}
+          >
+            <img src={video.snippet.thumbnails.high.url} style={{width:'100%'}} />
+            <h3>{video.snippet.title}</h3>
           </a>
         ))}
       </div>
