@@ -9,41 +9,46 @@ export default function Home() {
     const channelId = 'UC-SjVidMAjolfD6TswB3hMQ';
 
     fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=50`)
-      .then(res => res.json())
-      .then(data => {
-        const onlyVideos = (data.items || []).filter(item => item.id.kind === 'youtube#video');
+      .then((res) => res.json())
+      .then((data) => {
+        const onlyVideos = (data.items || []).filter(
+          (item) => item.id.kind === 'youtube#video'
+        );
         setVideos(onlyVideos);
       });
   }, []);
 
-  const filtered = videos.filter(v =>
+  const filtered = videos.filter((v) =>
     v.snippet.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div style={{ maxWidth:'1300px', margin:'auto', padding:'20px' }}>
-      <h1 style={{
-        textAlign:'center',
-        background:'#d97706',
-        color:'#fff',
-        padding:'30px',
-        borderRadius:'20px',
-        fontSize:'48px'
-      }}>
+    <div style={{ maxWidth: '1300px', margin: 'auto', padding: '20px' }}>
+      <h1
+        style={{
+          textAlign: 'center',
+          background: '#d97706',
+          color: '#fff',
+          padding: '30px',
+          borderRadius: '20px',
+          fontSize: '48px',
+        }}
+      >
         Sanatan Leela Katha
       </h1>
 
-      <div style={{ textAlign:'center', margin:'20px' }}>
+      <div style={{ textAlign: 'center', margin: '20px' }}>
         <a
           href="https://www.youtube.com/@Sanatanleelakatha"
           target="_blank"
+          rel="noopener noreferrer"
           style={{
-            background:'#b91c1c',
-            color:'#fff',
-            padding:'12px 25px',
-            textDecoration:'none',
-            borderRadius:'10px',
-            fontSize:'18px'
+            background: '#b91c1c',
+            color: '#fff',
+            padding: '12px 25px',
+            textDecoration: 'none',
+            borderRadius: '10px',
+            fontSize: '18px',
           }}
         >
           Visit Official YouTube Channel
@@ -52,38 +57,47 @@ export default function Home() {
 
       <input
         value={search}
-        onChange={(e)=>setSearch(e.target.value)}
+        onChange={(e) => setSearch(e.target.value)}
         placeholder="Search videos..."
         style={{
-          width:'100%',
-          padding:'14px',
-          margin:'20px 0',
-          fontSize:'16px'
+          width: '100%',
+          padding: '14px',
+          margin: '20px 0',
+          fontSize: '16px',
         }}
       />
 
-      <div style={{
-        display:'grid',
-        gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',
-        gap:'20px'
-      }}>
-        {filtered.map((video, i) => (
-          <a
-            key={i}
-            href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
-            target="_blank"
-            style={{
-              textDecoration:'none',
-              color:'#000',
-              boxShadow:'0 0 10px #ccc',
-              padding:'10px',
-              background:'#fff'
-            }}
-          >
-            <img src={video.snippet.thumbnails.high.url} style={{ width:'100%' }} />
-            <h3>{video.snippet.title}</h3>
-          </a>
-        ))}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))',
+          gap: '20px',
+        }}
+      >
+        {filtered.map((video, i) => {
+          return (
+            <a
+              key={i}
+              href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                textDecoration: 'none',
+                color: '#000',
+                boxShadow: '0 0 10px #ccc',
+                padding: '10px',
+                background: '#fff',
+              }}
+            >
+              <img
+                src={video.snippet.thumbnails.high.url}
+                alt={video.snippet.title}
+                style={{ width: '100%' }}
+              />
+              <h3>{video.snippet.title}</h3>
+            </a>
+          );
+        })}
       </div>
     </div>
   );
