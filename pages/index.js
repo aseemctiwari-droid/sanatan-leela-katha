@@ -6,13 +6,13 @@ export default function Home() {
 
   useEffect(() => {
     const apiKey = 'AIzaSyAV_WEwUMe8lp7pIEHeuCUl3QovsU2IRac';
-    const uploadPlaylist = 'UU-SjVidMAjolfD6TswB3hMQ';
+    const playlistId = 'PLPYb5j7I1D2u8FvR37-_pHCt9-R94SnWv';
 
     fetch(
       'https://www.googleapis.com/youtube/v3/playlistItems?key=' +
         apiKey +
         '&playlistId=' +
-        uploadPlaylist +
+        playlistId +
         '&part=snippet,contentDetails&maxResults=50'
     )
       .then((res) => res.json())
