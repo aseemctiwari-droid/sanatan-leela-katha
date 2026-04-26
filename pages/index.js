@@ -11,10 +11,12 @@ export default function Home() {
     fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`)
       .then(res => res.json())
       .then(data => {
-        const filteredItems = (data.items || []).filter(item =>
-          item.author === 'Sanatan Leela Katha' &&
-          item.link.includes('youtube.com/watch')
-        );
+
+        
+        setVideos(data.items || []);
+
+
+        
         setVideos(filteredItems);
       });
   }, []);
